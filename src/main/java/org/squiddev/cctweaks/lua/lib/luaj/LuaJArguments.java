@@ -40,6 +40,7 @@ public class LuaJArguments implements IArguments {
 		}
 	}
 
+	@Nonnull
 	@Override
 	public String getString(int index) throws LuaException {
 		LuaValue value = args.arg(index + 1);
@@ -50,6 +51,7 @@ public class LuaJArguments implements IArguments {
 		}
 	}
 
+	@Nonnull
 	@Override
 	public byte[] getStringBytes(int index) throws LuaException {
 		LuaValue value = args.arg(index + 1);
@@ -73,11 +75,13 @@ public class LuaJArguments implements IArguments {
 		return LuaJConverter.toObject(args.arg(index + 1), false);
 	}
 
+	@Nonnull
 	@Override
 	public Object[] asArguments() {
 		return LuaJConverter.toObjects(args, 1, false);
 	}
 
+	@Nonnull
 	@Override
 	public Object[] asBinary() {
 		return LuaJConverter.toObjects(args, 1, true);

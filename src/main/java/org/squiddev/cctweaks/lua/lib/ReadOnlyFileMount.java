@@ -2,6 +2,7 @@ package org.squiddev.cctweaks.lua.lib;
 
 import dan200.computercraft.api.filesystem.IMount;
 
+import javax.annotation.Nonnull;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
@@ -28,7 +29,7 @@ public final class ReadOnlyFileMount implements IMount {
 	}
 
 	@Override
-	public boolean exists(String path) throws IOException {
+	public boolean exists(@Nonnull String path) throws IOException {
 		if (created()) {
 			return getRealPath(path).exists();
 		} else {
@@ -37,7 +38,7 @@ public final class ReadOnlyFileMount implements IMount {
 	}
 
 	@Override
-	public boolean isDirectory(String path) throws IOException {
+	public boolean isDirectory(@Nonnull String path) throws IOException {
 		if (created()) {
 			File file = getRealPath(path);
 			return file.exists() && file.isDirectory();
@@ -47,7 +48,7 @@ public final class ReadOnlyFileMount implements IMount {
 	}
 
 	@Override
-	public void list(String path, List<String> contents) throws IOException {
+	public void list(@Nonnull String path, @Nonnull List<String> contents) throws IOException {
 		if (created()) {
 			File file = getRealPath(path);
 			if (!file.exists() || !file.isDirectory()) {
@@ -68,7 +69,7 @@ public final class ReadOnlyFileMount implements IMount {
 	}
 
 	@Override
-	public long getSize(String path) throws IOException {
+	public long getSize(@Nonnull String path) throws IOException {
 		if (created()) {
 			File file = getRealPath(path);
 			if (file.exists()) return file.isDirectory() ? 0 : file.length();
@@ -80,7 +81,7 @@ public final class ReadOnlyFileMount implements IMount {
 	}
 
 	@Override
-	public InputStream openForRead(String path) throws IOException {
+	public InputStream openForRead(@Nonnull String path) throws IOException {
 		if (created()) {
 			File file = getRealPath(path);
 			if (file.exists() && !file.isDirectory()) {

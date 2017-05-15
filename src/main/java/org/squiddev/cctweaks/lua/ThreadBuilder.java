@@ -1,5 +1,6 @@
 package org.squiddev.cctweaks.lua;
 
+import javax.annotation.Nonnull;
 import java.util.concurrent.SynchronousQueue;
 import java.util.concurrent.ThreadFactory;
 import java.util.concurrent.ThreadPoolExecutor;
@@ -31,7 +32,7 @@ public class ThreadBuilder {
 
 		return new ThreadFactory() {
 			@Override
-			public Thread newThread(Runnable runnable) {
+			public Thread newThread(@Nonnull Runnable runnable) {
 				Thread thread = new Thread(group, runnable, prefix + counter.getAndIncrement());
 				if (!thread.isDaemon()) thread.setDaemon(true);
 				if (thread.getPriority() != priority) thread.setPriority(priority);

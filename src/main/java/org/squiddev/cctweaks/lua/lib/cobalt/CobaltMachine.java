@@ -7,6 +7,7 @@ import dan200.computercraft.core.computer.Computer;
 import org.squiddev.cctweaks.api.lua.ArgumentDelegator;
 import org.squiddev.cctweaks.api.lua.IExtendedLuaMachine;
 import org.squiddev.cctweaks.lua.Config;
+import org.squiddev.cctweaks.lua.TweaksLogger;
 import org.squiddev.cctweaks.lua.lib.AbstractLuaContext;
 import org.squiddev.cobalt.*;
 import org.squiddev.cobalt.compiler.CompileException;
@@ -202,11 +203,13 @@ public class CobaltMachine extends AbstractLuaContext implements IExtendedLuaMac
 
 	@Override
 	public void softAbort(String message) {
+		TweaksLogger.debug(message);
 		softAbort = message;
 	}
 
 	@Override
 	public void hardAbort(String message) {
+		TweaksLogger.debug(message);
 		softAbort = message;
 		hardAbort = message;
 	}
@@ -323,6 +326,7 @@ public class CobaltMachine extends AbstractLuaContext implements IExtendedLuaMac
 	}
 	//endregion
 
+	@Nonnull
 	@Override
 	public Object[] yield(Object[] objects) throws InterruptedException {
 		try {

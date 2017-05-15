@@ -40,6 +40,7 @@ public class CobaltArguments implements IArguments {
 		}
 	}
 
+	@Nonnull
 	@Override
 	public String getString(int index) throws LuaException {
 		LuaValue value = args.arg(index + 1);
@@ -50,6 +51,7 @@ public class CobaltArguments implements IArguments {
 		}
 	}
 
+	@Nonnull
 	@Override
 	public byte[] getStringBytes(int index) throws LuaException {
 		LuaValue value = args.arg(index + 1);
@@ -77,11 +79,13 @@ public class CobaltArguments implements IArguments {
 		return CobaltConverter.toObject(args.arg(index + 1), false);
 	}
 
+	@Nonnull
 	@Override
 	public Object[] asArguments() {
 		return CobaltConverter.toObjects(args, 1, false);
 	}
 
+	@Nonnull
 	@Override
 	public Object[] asBinary() {
 		return CobaltConverter.toObjects(args, 1, true);

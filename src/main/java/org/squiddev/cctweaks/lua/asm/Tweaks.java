@@ -18,7 +18,6 @@ public class Tweaks {
 		chain.add(new CustomMachine());
 		addMulti(chain, new CustomThreading());
 		chain.add(new CustomTimeout());
-		chain.add(new LimitLabel());
 		chain.add(new WhitelistDebug());
 
 		chain.add(new ClassMerger(TweaksLogger.instance,

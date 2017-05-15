@@ -20,11 +20,12 @@ import java.util.Map;
  */
 public class PeripheralAPI_Patch extends PeripheralAPI implements ILuaObjectWithArguments {
 	@MergeVisitor.Stub
-	private PeripheralWrapper[] m_peripherals;
+	private final PeripheralWrapper[] m_peripherals;
 
 	@MergeVisitor.Stub
 	public PeripheralAPI_Patch(IAPIEnvironment _environment) {
 		super(_environment);
+		m_peripherals = new PeripheralWrapper[6];
 	}
 
 	private int parseSide(IArguments arguments) throws LuaException {

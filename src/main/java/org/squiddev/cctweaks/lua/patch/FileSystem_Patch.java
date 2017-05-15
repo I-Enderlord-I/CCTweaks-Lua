@@ -2,15 +2,12 @@ package org.squiddev.cctweaks.lua.patch;
 
 import dan200.computercraft.core.filesystem.FileSystem;
 import dan200.computercraft.core.filesystem.*;
-import org.squiddev.cctweaks.lua.Config;
 import org.squiddev.cctweaks.lua.patch.iface.FileSystemPatched;
 import org.squiddev.cctweaks.lua.patch.iface.MountedNormalFilePatched;
 import org.squiddev.patcher.visitors.MergeVisitor;
 
 import java.io.*;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 import java.util.regex.Pattern;
 
 /**
@@ -26,48 +23,13 @@ import java.util.regex.Pattern;
 @SuppressWarnings({"ConstantConditions", "SynchronizeOnNonFinalField"})
 public class FileSystem_Patch extends FileSystem implements FileSystemPatched {
 	@MergeVisitor.Stub
-	private Set<IMountedFile> m_openFiles;
-
-	private int openFilesCount;
+	private final Map<String, MountWrapper> m_mounts = new HashMap<String, MountWrapper>();
+	@MergeVisitor.Stub
+	private final Set<IMountedFile> m_openFiles = Collections.newSetFromMap(new WeakHashMap<IMountedFile, Boolean>());
 
 	@MergeVisitor.Stub
 	public FileSystem_Patch() throws FileSystemException {
 		super(null, null);
-	}
-
-	/**
-	 * Performance increases to find.
-	 *
-	 * If there is no wildcard then just check the file exists. Otherwise, start scanning from the
-	 * last directory before the wildcard.
-	 *
-	 * @param wildPath The wildcard to match
-	 * @return The list of found paths.
-	 * @throws FileSystemException Just generally
-	 */
-	public synchronized String[] find(String wildPath) throws FileSystemException {
-		wildPath = sanitizePath(wildPath, true);
-
-		// If we don't have a wildcard at all just check the file exists
-		int starIndex = wildPath.indexOf('*');
-		if (starIndex == -1) {
-			return exists(wildPath) ? new String[]{wildPath} : new String[0];
-		}
-
-		// Find the all non-wildcarded directories. For instance foo/bar/baz* -> foo/bar
-		int prevDir = wildPath.substring(0, starIndex).lastIndexOf('/');
-		String startDir = prevDir == -1 ? "" : wildPath.substring(0, prevDir);
-
-		// If this isn't a directory then just abort
-		if (!isDir(startDir)) return new String[0];
-
-		// Scan as normal, starting from this directory
-		Pattern wildPattern = Pattern.compile("^\\Q" + wildPath.replaceAll("\\*", "\\\\E[^\\\\/]*\\\\Q") + "\\E$");
-		ArrayList<String> matches = new ArrayList<String>();
-		findIn(startDir, matches, wildPattern);
-		String[] array = new String[matches.size()];
-		matches.toArray(array);
-		return array;
 	}
 
 	/**
@@ -90,29 +52,13 @@ public class FileSystem_Patch extends FileSystem implements FileSystemPatched {
 		return mount.openForWrite(path);
 	}
 
-	public void addFile(IMountedFile file) {
-		synchronized (m_openFiles) {
-			m_openFiles.add(file);
-			if (++openFilesCount > Config.Computer.maxFilesHandles) {
-				// Ensure that we aren't over the open file limit
-				// We throw Lua exceptions as FileSystemExceptions won't be handled by fs.open
-				try {
-					file.close();
-				} catch (IOException e) {
-					throw new LuaExceptionStub("Too many file handles: " + e.getMessage());
-				}
-				throw new LuaExceptionStub("Too many file handles");
-			}
-		}
+	@MergeVisitor.Stub
+	private synchronized <T extends IMountedFile> T openFile(T file, Closeable handle) throws FileSystemException {
+		return file;
 	}
 
-	public void removeFile(IMountedFile file, Closeable stream) throws IOException {
-		synchronized (m_openFiles) {
-			m_openFiles.remove(file);
-			openFilesCount--;
-
-			stream.close();
-		}
+	@MergeVisitor.Stub
+	private synchronized void closeFile(IMountedFile file, Closeable handle) throws IOException {
 	}
 
 	public synchronized IMountedFileNormal openForRead(String path) throws FileSystemException {
@@ -170,7 +116,7 @@ public class FileSystem_Patch extends FileSystem implements FileSystemPatched {
 
 				@Override
 				public void close() throws IOException {
-					removeFile(this, reader);
+					closeFile(this, reader);
 				}
 
 				@Override
@@ -178,8 +124,7 @@ public class FileSystem_Patch extends FileSystem implements FileSystemPatched {
 					throw new UnsupportedOperationException();
 				}
 			};
-			addFile(file);
-			return file;
+			return openFile(file, reader);
 		}
 		return null;
 	}
@@ -212,7 +157,7 @@ public class FileSystem_Patch extends FileSystem implements FileSystemPatched {
 
 				@Override
 				public void close() throws IOException {
-					removeFile(this, writer);
+					closeFile(this, writer);
 				}
 
 				@Override
@@ -220,8 +165,7 @@ public class FileSystem_Patch extends FileSystem implements FileSystemPatched {
 					writer.flush();
 				}
 			};
-			addFile(file);
-			return file;
+			return openFile(file, writer);
 		}
 		return null;
 	}
@@ -244,15 +188,14 @@ public class FileSystem_Patch extends FileSystem implements FileSystemPatched {
 				}
 
 				public void close() throws IOException {
-					removeFile(this, stream);
+					closeFile(this, stream);
 				}
 
 				public void flush() throws IOException {
 					throw new UnsupportedOperationException();
 				}
 			};
-			addFile(file);
-			return file;
+			return openFile(file, stream);
 		} else {
 			return null;
 		}
@@ -276,15 +219,14 @@ public class FileSystem_Patch extends FileSystem implements FileSystemPatched {
 				}
 
 				public void close() throws IOException {
-					removeFile(this, stream);
+					closeFile(this, stream);
 				}
 
 				public void flush() throws IOException {
 					stream.flush();
 				}
 			};
-			addFile(file);
-			return file;
+			return openFile(file, stream);
 		} else {
 			return null;
 		}

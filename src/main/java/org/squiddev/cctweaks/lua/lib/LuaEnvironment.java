@@ -198,13 +198,14 @@ public class LuaEnvironment implements ILuaEnvironment {
 			api.shutdown();
 		}
 
+		@Nonnull
 		@Override
 		public String[] getMethodNames() {
 			return api.getMethodNames();
 		}
 
 		@Override
-		public Object[] callMethod(ILuaContext context, int method, Object[] args) throws LuaException, InterruptedException {
+		public Object[] callMethod(@Nonnull ILuaContext context, int method, @Nonnull Object[] args) throws LuaException, InterruptedException {
 			return api.callMethod(context, method, args);
 		}
 
@@ -213,6 +214,7 @@ public class LuaEnvironment implements ILuaEnvironment {
 			return ArgumentDelegator.delegateLuaObject(api, context, method, arguments);
 		}
 
+		@Nonnull
 		@Override
 		public Map<Object, Object> getAdditionalData() {
 			return api instanceof IExtendedLuaObject ? ((IExtendedLuaObject) api).getAdditionalData() : Collections.emptyMap();
@@ -252,12 +254,12 @@ public class LuaEnvironment implements ILuaEnvironment {
 		}
 
 		@Override
-		public String mount(String desiredLoc, IMount mount) {
+		public String mount(@Nonnull String desiredLoc, @Nonnull IMount mount) {
 			return mount(desiredLoc, mount, desiredLoc);
 		}
 
 		@Override
-		public synchronized String mount(String desiredLoc, IMount mount, String driveName) {
+		public synchronized String mount(@Nonnull String desiredLoc, @Nonnull IMount mount, @Nonnull String driveName) {
 			synchronized (getFs()) {
 				String location = findFreeLocation(desiredLoc);
 				if (location != null) {
@@ -274,12 +276,12 @@ public class LuaEnvironment implements ILuaEnvironment {
 		}
 
 		@Override
-		public String mountWritable(String desiredLoc, IWritableMount mount) {
+		public String mountWritable(@Nonnull String desiredLoc, @Nonnull IWritableMount mount) {
 			return this.mountWritable(desiredLoc, mount, desiredLoc);
 		}
 
 		@Override
-		public synchronized String mountWritable(String desiredLoc, IWritableMount mount, String driveName) {
+		public synchronized String mountWritable(@Nonnull String desiredLoc, @Nonnull IWritableMount mount, @Nonnull String driveName) {
 			synchronized (getFs()) {
 				String location = findFreeLocation(desiredLoc);
 				if (location != null) {
@@ -313,10 +315,11 @@ public class LuaEnvironment implements ILuaEnvironment {
 		}
 
 		@Override
-		public void queueEvent(String s, Object[] objects) {
+		public void queueEvent(@Nonnull String s, Object[] objects) {
 			environment.queueEvent(s, objects);
 		}
 
+		@Nonnull
 		@Override
 		public String getAttachmentName() {
 			return environment.getLabel();

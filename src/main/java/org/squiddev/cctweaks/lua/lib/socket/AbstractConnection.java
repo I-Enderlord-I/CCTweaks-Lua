@@ -102,6 +102,7 @@ public abstract class AbstractConnection implements ILuaObjectWithArguments, IMe
 
 	protected abstract byte[] read(int count) throws LuaException, InterruptedException;
 
+	@Nonnull
 	@Override
 	public String[] getMethodNames() {
 		return new String[]{"checkConnected", "close", "read", "write", "id"};
@@ -140,7 +141,7 @@ public abstract class AbstractConnection implements ILuaObjectWithArguments, IMe
 	}
 
 	@Override
-	public Object[] callMethod(ILuaContext context, int method, Object[] arguments) throws LuaException, InterruptedException {
+	public Object[] callMethod(@Nonnull ILuaContext context, int method, @Nonnull Object[] arguments) throws LuaException, InterruptedException {
 		switch (method) {
 			case 0:
 				return new Object[]{checkConnected()};

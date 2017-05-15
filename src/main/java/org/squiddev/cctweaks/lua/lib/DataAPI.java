@@ -31,6 +31,7 @@ public class DataAPI implements ILuaAPI, ILuaObjectWithArguments, ILuaAPIFactory
 	public void advance(double timestep) {
 	}
 
+	@Nonnull
 	@Override
 	public String[] getMethodNames() {
 		return new String[]{"inflate", "deflate"};
@@ -48,7 +49,7 @@ public class DataAPI implements ILuaAPI, ILuaObjectWithArguments, ILuaAPIFactory
 	}
 
 	@Override
-	public Object[] callMethod(ILuaContext context, int method, Object[] args) throws LuaException, InterruptedException {
+	public Object[] callMethod(@Nonnull ILuaContext context, int method, @Nonnull Object[] args) throws LuaException, InterruptedException {
 		switch (method) {
 			case 0:
 				return inflate(BinaryConverter.toBytes(getString(args, 0)));

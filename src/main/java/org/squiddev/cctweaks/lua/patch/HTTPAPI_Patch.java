@@ -7,10 +7,8 @@ import dan200.computercraft.core.apis.IAPIEnvironment;
 import org.squiddev.cctweaks.lua.lib.HTTPRequest;
 import org.squiddev.patcher.visitors.MergeVisitor;
 
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
+import javax.annotation.Nonnull;
+import java.util.*;
 
 /**
  * Patches the HTTP API with several features:
@@ -19,25 +17,28 @@ import java.util.Map;
  */
 public class HTTPAPI_Patch extends HTTPAPI {
 	@MergeVisitor.Stub
-	private List<HTTPRequest> m_httpRequests;
+	private final List<HTTPRequest> m_httpRequests;
 	@MergeVisitor.Stub
-	private IAPIEnvironment m_apiEnvironment;
+	private final IAPIEnvironment m_apiEnvironment;
 
 	@MergeVisitor.Stub
 	public HTTPAPI_Patch(IAPIEnvironment environment) {
 		super(environment);
+		m_httpRequests = new ArrayList<HTTPRequest>();
+		m_apiEnvironment = null;
 	}
 
+	@Nonnull
 	@Override
 	public String[] getMethodNames() {
-		return new String[]{"request", "fetch", "checkURL"};
+		return new String[]{"request", "checkURL"};
 	}
 
 	@Override
-	public Object[] callMethod(ILuaContext context, int method, Object[] args) throws LuaException {
+	public Object[] callMethod(@Nonnull ILuaContext context, int method, @Nonnull Object[] args) throws LuaException {
 		switch (method) {
-			case 0:  // request
-			case 1: {
+			case 0: {
+				// request
 				if (args.length < 1 || !(args[0] instanceof String)) {
 					throw new LuaException("Expected string");
 				}
@@ -65,12 +66,13 @@ public class HTTPAPI_Patch extends HTTPAPI {
 						this.m_httpRequests.add(request);
 					}
 
-					return new Object[]{Boolean.valueOf(true)};
+					return new Object[]{Boolean.TRUE};
 				} catch (LuaException e) {
-					return new Object[]{Boolean.valueOf(false), e.getMessage()};
+					return new Object[]{Boolean.FALSE, e.getMessage()};
 				}
 			}
-			case 2: { // Check URL
+			case 1: {
+				// Check URL
 				if (args.length < 1 || !(args[0] instanceof String)) {
 					throw new LuaException("Expected string");
 				}
@@ -78,9 +80,9 @@ public class HTTPAPI_Patch extends HTTPAPI {
 
 				try {
 					HTTPRequest.checkURL(urlString);
-					return new Object[]{Boolean.valueOf(true)};
+					return new Object[]{Boolean.TRUE};
 				} catch (LuaException e) {
-					return new Object[]{Boolean.valueOf(false), e.getMessage()};
+					return new Object[]{Boolean.FALSE, e.getMessage()};
 				}
 			}
 			default:

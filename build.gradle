@@ -6,7 +6,7 @@ apply plugin: 'idea'
 apply plugin: 'maven-publish'
 
 group 'org.squiddev'
-version '1.4.0'
+version '1.5.0-nightly-2017051518'
 
 targetCompatibility = sourceCompatibility = 1.6
 compileTestJava.sourceCompatibility = compileTestJava.targetCompatibility = 1.8
@@ -14,10 +14,7 @@ compileTestJava.sourceCompatibility = compileTestJava.targetCompatibility = 1.8
 repositories {
 	mavenCentral()
 
-	ivy {
-		name = "ComputerCraft"
-		artifactPattern "http://addons-origin.cursecdn.com/files/2291/384/[module][revision](.[ext])"
-	}
+	maven { url = "https://crzd.me/files/maven/" }
 
 	maven {
 		name = "squiddev"
@@ -40,8 +37,9 @@ configurations {
 dependencies {
 	provided "com.google.code.findbugs:jsr305:3.0.2"
 
-	provided "ComputerCraft:ComputerCraft:1.79"
+	provided "dan200.computercraft:ComputerCraft:1.80pr0-2017051518"
 	compile 'com.google.guava:guava:19.0'
+	compile "org.apache.commons:commons-lang3:3.5"
 	shade "org.ow2.asm:asm-debug-all:5.0.4"
 
 	shade 'org.squiddev:Patcher:1.2.4'
@@ -64,9 +62,7 @@ sourceSets.test.compileClasspath += configurations.provided
 idea { module { scopes.PROVIDED.plus += [configurations.provided] } }
 
 def versions = [
-	('1.78')   : 'https://addons-origin.cursecdn.com/files/2275/878/ComputerCraft1.78.jar',
-	('1.79')   : 'https://addons-origin.cursecdn.com/files/2291/384/ComputerCraft1.79.jar',
-	('1.80pr0'): 'https://addons-origin.cursecdn.com/files/2311/39/ComputerCraft1.80pr0.jar',
+	('1.80pr0-nightly'): 'http://crzd.me/files/maven/dan200/computercraft/ComputerCraft/1.80pr0-2017051518/ComputerCraft-1.80pr0-2017050709.jar',
 ]
 
 task getVersions(type: Task) {
@@ -75,9 +71,13 @@ task getVersions(type: Task) {
 		if (!f.exists()) {
 			f.parentFile.mkdirs();
 
-			new URL(value).withInputStream {
-				i -> f.withOutputStream { it << i }
-			}
+			def connection = new URL(value).openConnection();
+			connection.setRequestProperty("User-Agent", "CCTweaks file downloader");
+			connection.connect();
+
+			def i = connection.getInputStream();
+			f.withOutputStream { it << i }
+			i.close()
 		}
 	}
 }

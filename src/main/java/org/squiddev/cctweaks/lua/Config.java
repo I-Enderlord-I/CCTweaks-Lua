@@ -74,19 +74,6 @@ public final class Config {
 		public static String preBiosPath;
 
 		/**
-		 * Maximum number of file handles a single computer can have open
-		 */
-		@DefaultInt(1024)
-		@Range(min = 1)
-		public static int maxFilesHandles;
-
-		/**
-		 * Remove non-printable, non-ASCII characters from labels
-		 */
-		@DefaultBoolean(true)
-		public static boolean limitedLabels;
-
-		/**
 		 * Configuration options to enable running computers across multiple
 		 * threads.
 		 */

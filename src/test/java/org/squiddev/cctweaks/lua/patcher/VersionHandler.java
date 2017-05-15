@@ -16,11 +16,9 @@ import java.util.Scanner;
  */
 public class VersionHandler {
 	public static List<Object[]> getVersions() {
-		return Arrays.asList(
-			new Object[]{"1.78"},
-			new Object[]{"1.79"},
-			new Object[]{"1.80pr0"}
-		);
+		return Arrays.asList(new Object[][]{
+			new Object[]{"1.80pr0-nightly"},
+		});
 	}
 
 	public static class Runtime {

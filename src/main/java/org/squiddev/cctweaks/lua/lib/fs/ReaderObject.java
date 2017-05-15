@@ -16,20 +16,24 @@ import java.io.IOException;
  */
 public class ReaderObject implements ILuaObjectWithArguments, IMethodDescriptor {
 	private final MountedNormalFilePatched stream;
+	private boolean open = true;
 
 	public ReaderObject(IMountedFile stream) {
 		this.stream = (MountedNormalFilePatched) stream;
 	}
 
+	@Nonnull
 	@Override
 	public String[] getMethodNames() {
 		return new String[]{"readLine", "readAll", "close"};
 	}
 
 	@Override
-	public Object[] callMethod(ILuaContext context, int method, Object[] args) throws LuaException, InterruptedException {
+	public Object[] callMethod(@Nonnull ILuaContext context, int method, @Nonnull Object[] args) throws LuaException, InterruptedException {
 		switch (method) {
 			case 0:
+				//readLine
+				if (!open) throw new LuaException("attempt to use a closed file");
 				try {
 					byte[] result = stream.readLineByte();
 					if (result != null) return new Object[]{result};
@@ -38,6 +42,8 @@ public class ReaderObject implements ILuaObjectWithArguments, IMethodDescriptor 
 				}
 				return null;
 			case 1:
+				// readAll
+				if (!open) throw new LuaException("attempt to use a closed file");
 				try {
 					byte[] result = stream.readAllByte();
 					if (result != null) return new Object[]{result};
@@ -46,8 +52,10 @@ public class ReaderObject implements ILuaObjectWithArguments, IMethodDescriptor 
 				}
 				return null;
 			case 2:
+				// close
 				try {
 					stream.close();
+					open = false;
 				} catch (IOException ignored) {
 				}
 				return null;

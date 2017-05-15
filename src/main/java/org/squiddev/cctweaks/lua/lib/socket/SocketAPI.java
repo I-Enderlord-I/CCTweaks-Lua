@@ -9,6 +9,7 @@ import org.squiddev.cctweaks.api.lua.IMethodDescriptor;
 import org.squiddev.cctweaks.lua.Config;
 import org.squiddev.cctweaks.lua.lib.LuaHelpers;
 
+import javax.annotation.Nonnull;
 import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
@@ -47,13 +48,14 @@ public class SocketAPI implements ILuaAPI, IMethodDescriptor {
 	public void advance(double timestep) {
 	}
 
+	@Nonnull
 	@Override
 	public String[] getMethodNames() {
 		return new String[]{"connect", "websocket"};
 	}
 
 	@Override
-	public Object[] callMethod(ILuaContext context, int method, Object[] arguments) throws LuaException, InterruptedException {
+	public Object[] callMethod(@Nonnull ILuaContext context, int method, @Nonnull Object[] arguments) throws LuaException, InterruptedException {
 		switch (method) {
 			case 0: {
 				String address = getString(arguments, 0);

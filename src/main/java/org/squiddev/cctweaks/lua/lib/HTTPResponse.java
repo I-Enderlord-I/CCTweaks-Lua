@@ -5,33 +5,36 @@ import dan200.computercraft.api.lua.ILuaObject;
 import dan200.computercraft.api.lua.LuaException;
 import org.squiddev.cctweaks.api.lua.IMethodDescriptor;
 
+import javax.annotation.Nonnull;
 import java.util.Arrays;
 import java.util.Map;
 
 public class HTTPResponse implements ILuaObject, IMethodDescriptor {
 	private final int responseCode;
 	private final byte[] result;
-	private final Map<String, Map<Integer, String>> headers;
+	private final Map<String, String> headers;
 	private int index = 0;
-	private boolean closed = false;
+	private boolean open = true;
 
-	public HTTPResponse(int responseCode, byte[] result, Map<String, Map<Integer, String>> headers) {
+	public HTTPResponse(int responseCode, byte[] result, Map<String, String> headers) {
 		this.responseCode = responseCode;
 		this.result = result;
 		this.headers = headers;
 	}
 
+	@Nonnull
 	@Override
 	public String[] getMethodNames() {
 		return new String[]{"readLine", "readAll", "read", "close", "getResponseCode", "getResponseHeaders"};
 	}
 
 	@Override
-	public Object[] callMethod(ILuaContext context, int method, Object[] args) throws LuaException, InterruptedException {
+	public Object[] callMethod(@Nonnull ILuaContext context, int method, @Nonnull Object[] args) throws LuaException, InterruptedException {
 		switch (method) {
 			case 0: {
+				// readLine
+				if (!open) throw new LuaException("attempt to use a closed response");
 				// We have these as separate methods to ensure select('#', ...) works
-				if (closed) return null;
 				if (index >= result.length) return new Object[1];
 
 				int start = index, end = -1, newIndex = -1;
@@ -67,7 +70,8 @@ public class HTTPResponse implements ILuaObject, IMethodDescriptor {
 				return new Object[]{Arrays.copyOfRange(result, start, end)};
 			}
 			case 1:
-				if (closed) return null;
+				// readLine
+				if (!open) throw new LuaException("attempt to use a closed response");
 				if (index >= result.length) return new Object[]{""};
 
 				int start = index;
@@ -76,7 +80,8 @@ public class HTTPResponse implements ILuaObject, IMethodDescriptor {
 
 				return new Object[]{Arrays.copyOfRange(result, start, end)};
 			case 2: {
-				if (closed) return null;
+				// read
+				if (!open) throw new LuaException("attempt to use a closed response");
 				if (index >= result.length) return new Object[1];
 
 				byte character = result[index];
@@ -84,7 +89,7 @@ public class HTTPResponse implements ILuaObject, IMethodDescriptor {
 				return new Object[]{character};
 			}
 			case 3:
-				closed = true;
+				open = false;
 				break;
 			case 4:
 				return new Object[]{responseCode};

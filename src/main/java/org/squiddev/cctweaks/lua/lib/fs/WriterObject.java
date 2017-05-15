@@ -17,11 +17,13 @@ import java.io.IOException;
  */
 public class WriterObject implements ILuaObjectWithArguments, IMethodDescriptor {
 	private final MountedNormalFilePatched stream;
+	private boolean open = true;
 
 	public WriterObject(IMountedFile stream) {
 		this.stream = (MountedNormalFilePatched) stream;
 	}
 
+	@Nonnull
 	@Override
 	public String[] getMethodNames() {
 		return new String[]{"write", "writeLine", "close", "flush"};
@@ -43,23 +45,31 @@ public class WriterObject implements ILuaObjectWithArguments, IMethodDescriptor 
 	}
 
 	@Override
-	public Object[] callMethod(ILuaContext context, int method, Object[] args) throws LuaException {
+	public Object[] callMethod(@Nonnull ILuaContext context, int method, @Nonnull Object[] args) throws LuaException {
 		switch (method) {
 			case 0: {
+				// write
+				if (!open) throw new LuaException("attempt to use a closed file");
 				write(args, false);
 				return null;
 			}
 			case 1:
+				// writeLine
+				if (!open) throw new LuaException("attempt to use a closed file");
 				write(args, true);
 				return null;
 			case 2:
+				// close
 				try {
 					stream.close();
+					open = false;
 					return null;
 				} catch (IOException ignored) {
 					return null;
 				}
 			case 3:
+				// flush
+				if (!open) throw new LuaException("attempt to use a closed file");
 				try {
 					stream.flush();
 					return null;

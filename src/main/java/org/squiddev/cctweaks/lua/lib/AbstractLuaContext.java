@@ -7,6 +7,8 @@ import dan200.computercraft.core.computer.Computer;
 import dan200.computercraft.core.computer.ITask;
 import dan200.computercraft.core.computer.MainThread;
 
+import javax.annotation.Nonnull;
+
 public abstract class AbstractLuaContext implements ILuaContext {
 	private final Computer computer;
 
@@ -14,6 +16,7 @@ public abstract class AbstractLuaContext implements ILuaContext {
 		this.computer = computer;
 	}
 
+	@Nonnull
 	@Override
 	public final Object[] pullEvent(String filter) throws LuaException, InterruptedException {
 		Object[] results = pullEventRaw(filter);
@@ -30,7 +33,7 @@ public abstract class AbstractLuaContext implements ILuaContext {
 	}
 
 	@Override
-	public final Object[] executeMainThreadTask(final ILuaTask task) throws LuaException, InterruptedException {
+	public final Object[] executeMainThreadTask(@Nonnull final ILuaTask task) throws LuaException, InterruptedException {
 		long taskID = issueMainThreadTask(task);
 
 		Object[] response;
@@ -55,7 +58,7 @@ public abstract class AbstractLuaContext implements ILuaContext {
 	}
 
 	@Override
-	public final long issueMainThreadTask(final ILuaTask task) throws LuaException {
+	public final long issueMainThreadTask(@Nonnull final ILuaTask task) throws LuaException {
 		final long taskID = MainThread.getUniqueTaskID();
 		ITask generatedTask = new ITask() {
 			@Override

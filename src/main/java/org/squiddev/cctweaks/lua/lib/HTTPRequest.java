@@ -1,5 +1,6 @@
 package org.squiddev.cctweaks.lua.lib;
 
+import com.google.common.base.Joiner;
 import dan200.computercraft.ComputerCraft;
 import dan200.computercraft.api.lua.LuaException;
 import org.squiddev.cctweaks.lua.TweaksLogger;
@@ -49,7 +50,7 @@ public class HTTPRequest {
 	private boolean success = false;
 	private byte[] result;
 	private int responseCode = -1;
-	private Map<String, Map<Integer, String>> responseHeaders;
+	private Map<String, String> responseHeaders;
 
 	private static final String[] methods = {
 		"GET", "POST", "HEAD", "OPTIONS", "PUT", "DELETE", "TRACE"
@@ -143,16 +144,10 @@ public class HTTPRequest {
 							success = responseSuccess;
 							result = buffer.toByteArray();
 
-							Map<String, Map<Integer, String>> headers = responseHeaders = new HashMap<String, Map<Integer, String>>();
+							Joiner joiner = Joiner.on(',');
+							Map<String, String> headers = responseHeaders = new HashMap<String, String>();
 							for (Map.Entry<String, List<String>> header : connection.getHeaderFields().entrySet()) {
-								Map<Integer, String> values = new HashMap<Integer, String>();
-
-								int i = 0;
-								for (String value : header.getValue()) {
-									values.put(++i, value);
-								}
-
-								headers.put(header.getKey(), values);
+								headers.put(header.getKey(), joiner.join(header.getValue()));
 							}
 						}
 					}

@@ -53,6 +53,7 @@ public interface IArguments {
 	 * @return The string that was read
 	 * @throws LuaException In the form {@code "Expected string"}, when the argument is not a string.
 	 */
+	@Nonnull
 	byte[] getStringBytes(int index) throws LuaException;
 
 	/**
