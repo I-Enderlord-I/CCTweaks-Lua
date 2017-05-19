@@ -24,22 +24,9 @@ public class Tweaks {
 			"dan200.computercraft.core.computer.Computer",
 			"org.squiddev.cctweaks.lua.patch.Computer_Patch"
 		));
-
-		chain.add(new ClassMerger(TweaksLogger.instance,
-			"dan200.computercraft.core.filesystem.FileSystem",
-			"org.squiddev.cctweaks.lua.patch.FileSystem_Patch"
-		));
-
-		chain.add(new ClassMerger(TweaksLogger.instance,
-			"dan200.computercraft.core.apis.HTTPAPI",
-			"org.squiddev.cctweaks.lua.patch.HTTPAPI_Patch"
-		));
-
 		// Binary patches
 		chain.add(new BinaryMachine());
-		chain.add(new ClassMerger(TweaksLogger.instance, "dan200.computercraft.core.apis.FSAPI", "org.squiddev.cctweaks.lua.patch.FSAPI_Patch"));
 		chain.add(new ClassMerger(TweaksLogger.instance, "dan200.computercraft.core.apis.PeripheralAPI", "org.squiddev.cctweaks.lua.patch.PeripheralAPI_Patch"));
-		chain.add(new ClassMerger(TweaksLogger.instance, "dan200.computercraft.core.apis.OSAPI", "org.squiddev.cctweaks.lua.patch.OSAPI_Patch"));
 		chain.add(new ClassMerger(TweaksLogger.instance, "dan200.computercraft.shared.peripheral.modem.ModemPeripheral", "org.squiddev.cctweaks.lua.patch.ModemPeripheral_Patch"));
 	}
 

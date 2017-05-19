@@ -6,7 +6,7 @@ apply plugin: 'idea'
 apply plugin: 'maven-publish'
 
 group 'org.squiddev'
-version '1.5.0-nightly-2017051518'
+version '1.5.0-nightly-2017051909'
 
 targetCompatibility = sourceCompatibility = 1.6
 compileTestJava.sourceCompatibility = compileTestJava.targetCompatibility = 1.8
@@ -37,9 +37,8 @@ configurations {
 dependencies {
 	provided "com.google.code.findbugs:jsr305:3.0.2"
 
-	provided "dan200.computercraft:ComputerCraft:1.80pr0-2017051518"
+	provided "dan200.computercraft:ComputerCraft:1.80pr0-2017051909"
 	compile 'com.google.guava:guava:19.0'
-	compile "org.apache.commons:commons-lang3:3.5"
 	shade "org.ow2.asm:asm-debug-all:5.0.4"
 
 	shade 'org.squiddev:Patcher:1.2.4'
@@ -54,7 +53,9 @@ dependencies {
 
 	provided 'org.squiddev:ConfigGen:1.2.5'
 
-	testCompile group: 'junit', name: 'junit', version: '4.11'
+	testCompile 'junit:junit:4.11'
+	testCompile 'org.apache.logging.log4j:log4j-core:2.8.2'
+	testRuntime "org.apache.commons:commons-lang3:3.5"
 }
 
 sourceSets.main.compileClasspath += configurations.provided
@@ -62,7 +63,7 @@ sourceSets.test.compileClasspath += configurations.provided
 idea { module { scopes.PROVIDED.plus += [configurations.provided] } }
 
 def versions = [
-	('1.80pr0-nightly'): 'http://crzd.me/files/maven/dan200/computercraft/ComputerCraft/1.80pr0-2017051518/ComputerCraft-1.80pr0-2017050709.jar',
+	('1.80pr0-nightly-2017051909'): 'http://crzd.me/files/maven/dan200/computercraft/ComputerCraft/1.80pr0-2017051909/ComputerCraft-1.80pr0-2017051909.jar',
 ]
 
 task getVersions(type: Task) {

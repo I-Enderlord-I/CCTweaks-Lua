@@ -3,7 +3,6 @@ package org.squiddev.cctweaks.lua.lib.cobalt;
 import dan200.computercraft.core.computer.Computer;
 import dan200.computercraft.core.filesystem.FileSystem;
 import dan200.computercraft.core.filesystem.FileSystemException;
-import org.squiddev.cctweaks.lua.patch.iface.FileSystemPatched;
 import org.squiddev.cobalt.lib.platform.AbstractResourceManipulator;
 import org.squiddev.cobalt.lib.profiler.ProfilerLib;
 
@@ -24,14 +23,10 @@ public class CobaltResourceProvider extends AbstractResourceManipulator implemen
 		return fileSystem = computer.getAPIEnvironment().getFileSystem();
 	}
 
-	private FileSystemPatched getPatchedFileSystem() {
-		return (FileSystemPatched) fileSystem;
-	}
-
 	@Override
 	public InputStream findResource(String path) {
 		try {
-			return getPatchedFileSystem().openForReadStream(path);
+			return getFileSystem().openForRead(path);
 		} catch (FileSystemException e) {
 			return null;
 		}
@@ -58,7 +53,7 @@ public class CobaltResourceProvider extends AbstractResourceManipulator implemen
 	@Override
 	public DataOutputStream createWriter(String path) throws IOException {
 		try {
-			return new DataOutputStream(getPatchedFileSystem().openForWriteStream(path));
+			return new DataOutputStream(getFileSystem().openForWrite(path, false));
 		} catch (FileSystemException e) {
 			throw new IOException(e.getMessage());
 		}

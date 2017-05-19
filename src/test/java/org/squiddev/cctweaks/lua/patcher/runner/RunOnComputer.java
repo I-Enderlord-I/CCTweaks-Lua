@@ -1,9 +1,11 @@
 package org.squiddev.cctweaks.lua.patcher.runner;
 
+import dan200.computercraft.ComputerCraft;
 import dan200.computercraft.core.computer.Computer;
 import dan200.computercraft.core.computer.ComputerThread;
 import dan200.computercraft.core.computer.MainThread;
 import dan200.computercraft.core.terminal.Terminal;
+import org.apache.logging.log4j.LogManager;
 import org.junit.Assert;
 
 import java.lang.reflect.Field;
@@ -13,6 +15,9 @@ import java.lang.reflect.Field;
  */
 public class RunOnComputer {
 	public static void run(String program, int shutdownAfter) throws Throwable {
+		ComputerCraft.logPeripheralErrors = true;
+		ComputerCraft.log = LogManager.getLogger("ComputerCraft");
+
 		MemoryMount mount = new MemoryMount()
 			.addFile("test", program)
 			.addFile("startup", "assert.assert(pcall(loadfile('test', _ENV or getfenv()) or error)) os.shutdown()");

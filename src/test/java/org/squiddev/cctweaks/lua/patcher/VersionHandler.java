@@ -17,7 +17,7 @@ import java.util.Scanner;
 public class VersionHandler {
 	public static List<Object[]> getVersions() {
 		return Arrays.asList(new Object[][]{
-			new Object[]{"1.80pr0-nightly"},
+			new Object[]{"1.80pr0-nightly-2017051909"},
 		});
 	}
 
@@ -92,6 +92,11 @@ public class VersionHandler {
 		}
 
 		return withRuntimes;
+	}
+
+	public static RewritingLoader getLatestLoader() throws Exception {
+		List<Object[]> versions = getVersions();
+		return getLoader((String) versions.get(versions.size() - 1)[0]);
 	}
 
 	public static RewritingLoader getLoader(String version) throws Exception {

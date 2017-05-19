@@ -12,7 +12,7 @@ import java.util.List;
 
 @RunWith(Parameterized.class)
 public class TimeoutTest {
-	@Parameterized.Parameters(name = "Version: 1.79, Version: {0}")
+	@Parameterized.Parameters(name = "Version: {0}")
 	public static List<Object[]> getVersions() {
 		return Lists.newArrayList(
 			// Non-timeoutError using tests fail as the inner loop never calls
@@ -45,7 +45,7 @@ public class TimeoutTest {
 	@Test
 	public void testTimeout() throws Throwable {
 		try {
-			ClassLoader loader = VersionHandler.getLoader("1.79");
+			ClassLoader loader = VersionHandler.getLatestLoader();
 			VersionHandler.runFile(loader, "timeout", 100);
 		} catch (AssertionError e) {
 			if (e.getMessage().contains("Too long without yielding")) return;
