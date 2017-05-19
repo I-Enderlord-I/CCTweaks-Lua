@@ -169,7 +169,7 @@ public class LuaEnvironment implements ILuaEnvironment {
 		return factory.getPreBios();
 	}
 
-	private static class LuaAPI implements ILuaAPI, ILuaObjectWithArguments, IExtendedLuaObject, IMethodDescriptor {
+	private static class LuaAPI implements ILuaAPI, IExtendedLuaObject, IMethodDescriptor {
 		private final org.squiddev.cctweaks.api.lua.ILuaAPI api;
 		private final ILuaAPIFactory factory;
 
@@ -207,11 +207,6 @@ public class LuaEnvironment implements ILuaEnvironment {
 		@Override
 		public Object[] callMethod(@Nonnull ILuaContext context, int method, @Nonnull Object[] args) throws LuaException, InterruptedException {
 			return api.callMethod(context, method, args);
-		}
-
-		@Override
-		public Object[] callMethod(@Nonnull ILuaContext context, int method, @Nonnull IArguments arguments) throws LuaException, InterruptedException {
-			return ArgumentDelegator.delegateLuaObject(api, context, method, arguments);
 		}
 
 		@Nonnull

@@ -2,7 +2,10 @@ package org.squiddev.cctweaks.lua.lib;
 
 import dan200.computercraft.api.lua.ILuaContext;
 import dan200.computercraft.api.lua.LuaException;
-import org.squiddev.cctweaks.api.lua.*;
+import org.squiddev.cctweaks.api.lua.IExtendedComputerAccess;
+import org.squiddev.cctweaks.api.lua.ILuaAPI;
+import org.squiddev.cctweaks.api.lua.ILuaAPIFactory;
+import org.squiddev.cctweaks.api.lua.IMethodDescriptor;
 import org.squiddev.cctweaks.lua.Config;
 
 import javax.annotation.Nonnull;
@@ -18,7 +21,7 @@ import static org.squiddev.cctweaks.lua.lib.ArgumentHelper.getString;
 /**
  * Adds inflate/deflate APIs
  */
-public class DataAPI implements ILuaAPI, ILuaObjectWithArguments, ILuaAPIFactory, IMethodDescriptor {
+public class DataAPI implements ILuaAPI, ILuaAPIFactory, IMethodDescriptor {
 	@Override
 	public void startup() {
 	}
@@ -56,19 +59,6 @@ public class DataAPI implements ILuaAPI, ILuaObjectWithArguments, ILuaAPIFactory
 
 			case 1:
 				return deflate(BinaryConverter.toBytes(getString(args, 0)));
-		}
-
-		return null;
-	}
-
-	@Override
-	public Object[] callMethod(@Nonnull ILuaContext context, int method, @Nonnull IArguments args) throws LuaException, InterruptedException {
-		switch (method) {
-			case 0:
-				return inflate(args.getStringBytes(0));
-
-			case 1:
-				return deflate(args.getStringBytes(0));
 		}
 
 		return null;

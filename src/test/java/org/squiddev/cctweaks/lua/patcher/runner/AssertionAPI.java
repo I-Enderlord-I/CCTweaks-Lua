@@ -5,17 +5,13 @@ import dan200.computercraft.api.lua.ILuaTask;
 import dan200.computercraft.api.lua.LuaException;
 import dan200.computercraft.core.apis.ILuaAPI;
 import org.junit.Assert;
-import org.squiddev.cctweaks.api.lua.IArguments;
-import org.squiddev.cctweaks.api.lua.ILuaObjectWithArguments;
 import org.squiddev.cctweaks.api.lua.IMethodDescriptor;
 import org.squiddev.cctweaks.lua.TweaksLogger;
-
-import javax.annotation.Nonnull;
 
 /**
  * Adds various assertions to Lua
  */
-public class AssertionAPI implements ILuaAPI, ILuaObjectWithArguments, IMethodDescriptor {
+public class AssertionAPI implements ILuaAPI, IMethodDescriptor {
 	private Throwable exception;
 
 	@Override
@@ -99,11 +95,6 @@ public class AssertionAPI implements ILuaAPI, ILuaObjectWithArguments, IMethodDe
 			exception = e;
 			throw new LuaException(e.getMessage());
 		}
-	}
-
-	@Override
-	public Object[] callMethod(@Nonnull ILuaContext context, int method, @Nonnull IArguments arguments) throws LuaException, InterruptedException {
-		return callMethod(context, method, arguments.asBinary());
 	}
 
 	public Throwable getException() {

@@ -24,10 +24,6 @@ public class Tweaks {
 			"dan200.computercraft.core.computer.Computer",
 			"org.squiddev.cctweaks.lua.patch.Computer_Patch"
 		));
-		// Binary patches
-		chain.add(new BinaryMachine());
-		chain.add(new ClassMerger(TweaksLogger.instance, "dan200.computercraft.core.apis.PeripheralAPI", "org.squiddev.cctweaks.lua.patch.PeripheralAPI_Patch"));
-		chain.add(new ClassMerger(TweaksLogger.instance, "dan200.computercraft.shared.peripheral.modem.ModemPeripheral", "org.squiddev.cctweaks.lua.patch.ModemPeripheral_Patch"));
 	}
 
 	private static void addMulti(TransformationChain chain, ClassReplacer replacer) {

@@ -1,10 +1,9 @@
 package org.squiddev.cctweaks.lua.lib.socket;
 
 import dan200.computercraft.api.lua.ILuaContext;
+import dan200.computercraft.api.lua.ILuaObject;
 import dan200.computercraft.api.lua.LuaException;
 import dan200.computercraft.api.peripheral.IComputerAccess;
-import org.squiddev.cctweaks.api.lua.IArguments;
-import org.squiddev.cctweaks.api.lua.ILuaObjectWithArguments;
 import org.squiddev.cctweaks.api.lua.IMethodDescriptor;
 import org.squiddev.cctweaks.lua.Config;
 import org.squiddev.cctweaks.lua.lib.BinaryConverter;
@@ -20,7 +19,7 @@ import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Future;
 
-public abstract class AbstractConnection implements ILuaObjectWithArguments, IMethodDescriptor, ISocketListener {
+public abstract class AbstractConnection implements ILuaObject, IMethodDescriptor, ISocketListener {
 	private final SocketAPI owner;
 	private final IComputerAccess computer;
 	private final int id;
@@ -106,38 +105,6 @@ public abstract class AbstractConnection implements ILuaObjectWithArguments, IMe
 	@Override
 	public String[] getMethodNames() {
 		return new String[]{"checkConnected", "close", "read", "write", "id"};
-	}
-
-	@Override
-	public Object[] callMethod(@Nonnull ILuaContext context, int method, @Nonnull IArguments arguments) throws LuaException, InterruptedException {
-		switch (method) {
-			case 0:
-				return new Object[]{checkConnected()};
-			case 1:
-				if (isClosed()) throw new LuaException("Socket already closed");
-				close(true);
-				return null;
-			case 2: {
-				int count = Integer.MAX_VALUE;
-				Object argument = arguments.getArgument(0);
-				if (argument instanceof Number) {
-					count = Math.max(0, ((Number) argument).intValue());
-				} else if (argument != null) {
-					throw new LuaException("Expected number");
-				}
-
-				byte[] contents = read(count);
-				return new Object[]{contents};
-			}
-			case 3: {
-				int written = write(arguments.getStringBytes(0));
-				return new Object[]{written};
-			}
-			case 4:
-				return new Object[]{id};
-			default:
-				return null;
-		}
 	}
 
 	@Override

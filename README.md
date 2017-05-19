@@ -13,18 +13,14 @@ This will inject CCTweaks into the class loader, adding modifications.
 ## Features
  - Custom computer timeout
  - Whitelist globals (such as debug)
- - Fix the binary strings (for fs, http, rednet and os.queueEvent)
- - TCP socket API (`socket`)
+ - TCP and websocket socket API (`socket`)
  - Compression API (`data`)
  - [Cobalt](https://github.com/SquidDev/Cobalt) VM (reentrant fork of LuaJ)
    - Custom termination handler
    - Several bugs fixed (any object error messages, string pattern matching, number format strings)
    - Run multiple computers at once
  - Additional VMs provided by [CCTweaks-Runtimes](https://github.com/SquidDev-CC/CCTweaks-Runtimes)
- - Return HTTP handle on failures
- - Allow getting headers from HTTP responses
  - API for adding custom APIs
- - Limit number of open file handles
  - Boot from custom `bios.lua` file
 
 ## Documentation

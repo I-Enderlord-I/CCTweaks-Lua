@@ -4,7 +4,6 @@ import dan200.computercraft.api.lua.ILuaObject;
 import dan200.computercraft.api.lua.LuaException;
 import dan200.computercraft.core.apis.ILuaAPI;
 import dan200.computercraft.core.computer.Computer;
-import org.squiddev.cctweaks.api.lua.ArgumentDelegator;
 import org.squiddev.cctweaks.api.lua.IExtendedLuaMachine;
 import org.squiddev.cctweaks.lua.Config;
 import org.squiddev.cctweaks.lua.TweaksLogger;
@@ -255,7 +254,8 @@ public class CobaltMachine extends AbstractLuaContext implements IExtendedLuaMac
 					}
 
 					try {
-						Object[] results = ArgumentDelegator.delegateLuaObject(object, CobaltMachine.this, method, new CobaltArguments(args));
+						@SuppressWarnings("deprecation")
+						Object[] results = object.callMethod(CobaltMachine.this, method, CobaltConverter.toObjects(args, 1, false));
 						return toValues(results);
 					} catch (LuaException e) {
 						throw new LuaError(e.getMessage(), e.getLevel());
