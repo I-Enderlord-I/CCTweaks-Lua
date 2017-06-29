@@ -1,11 +1,11 @@
 package org.squiddev.cctweaks.lua.lib.socket;
 
+import dan200.computercraft.ComputerCraft;
 import dan200.computercraft.api.lua.ILuaContext;
 import dan200.computercraft.api.lua.ILuaObject;
 import dan200.computercraft.api.lua.LuaException;
 import dan200.computercraft.api.peripheral.IComputerAccess;
 import org.squiddev.cctweaks.api.lua.IMethodDescriptor;
-import org.squiddev.cctweaks.lua.Config;
 import org.squiddev.cctweaks.lua.lib.BinaryConverter;
 import org.squiddev.cctweaks.lua.lib.LuaHelpers;
 
@@ -86,12 +86,8 @@ public abstract class AbstractConnection implements ILuaObject, IMethodDescripto
 
 	protected InetSocketAddress connect(URI uri, int port) throws Exception {
 		InetAddress resolved = InetAddress.getByName(uri.getHost());
-		if (Config.APIs.Socket.blacklist.active && Config.APIs.Socket.blacklist.matches(resolved, uri.getHost())) {
-			throw new LuaException("Address is blacklisted");
-		}
-
-		if (Config.APIs.Socket.whitelist.active && !Config.APIs.Socket.whitelist.matches(resolved, uri.getHost())) {
-			throw new LuaException("Address is not whitelisted");
+		if (ComputerCraft.http_blacklist.matches(resolved) || !ComputerCraft.http_blacklist.matches(resolved)) {
+			throw new LuaException("Domain not permitted");
 		}
 
 		return new InetSocketAddress(resolved, uri.getPort() == -1 ? port : uri.getPort());

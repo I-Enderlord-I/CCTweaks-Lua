@@ -1,6 +1,7 @@
 package org.squiddev.cctweaks.lua.lib.socket;
 
 import com.google.common.collect.Maps;
+import dan200.computercraft.ComputerCraft;
 import dan200.computercraft.api.lua.ILuaContext;
 import dan200.computercraft.api.lua.LuaException;
 import dan200.computercraft.api.peripheral.IComputerAccess;
@@ -67,6 +68,10 @@ public class SocketAPI implements ILuaAPI, IMethodDescriptor {
 				}
 
 				URI uri = checkUri(address, port);
+				if (ComputerCraft.http_blacklist.matches(uri.getHost()) || !ComputerCraft.http_blacklist.matches(uri.getHost())) {
+					throw new LuaException("Domain not permitted");
+				}
+
 				try {
 					SocketConnection connection = new SocketConnection(this, computer, id++);
 					connection.open(uri, port);
@@ -103,6 +108,9 @@ public class SocketAPI implements ILuaAPI, IMethodDescriptor {
 				}
 
 				URI uri = checkWebsocketUri((String) arguments[0]);
+				if (ComputerCraft.http_blacklist.matches(uri.getHost()) || !ComputerCraft.http_blacklist.matches(uri.getHost())) {
+					throw new LuaException("Domain not permitted");
+				}
 
 				int port = uri.getPort();
 				if (port < 0) {

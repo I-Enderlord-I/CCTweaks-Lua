@@ -1,6 +1,5 @@
 package org.squiddev.cctweaks.lua;
 
-import org.squiddev.cctweaks.lua.lib.socket.AddressMatcher;
 import org.squiddev.configgen.*;
 
 /**
@@ -127,25 +126,6 @@ public final class Config {
 			@DefaultBoolean(true)
 			@RequiresRestart(mc = false, world = true)
 			public static boolean websocket;
-
-			/**
-			 * Blacklisted domain names.
-			 *
-			 * Entries are either domain names (www.example.com) or IP addresses in
-			 * string format (10.0.0.3), optionally in CIDR notation to make it easier
-			 * to define address ranges (1.0.0.0/8). Domains are resolved to their
-			 * actual IP once on startup, future requests are resolved and compared
-			 * to the resolved addresses.
-			 */
-			@DefaultString({"127.0.0.0/8", "10.0.0.0/8", "192.168.0.0/16", "172.16.0.0/12"})
-			public static AddressMatcher blacklist;
-
-			/**
-			 * Whitelisted domain names.
-			 * If something is mentioned in both the blacklist and whitelist then
-			 * the blacklist takes priority.
-			 */
-			public static AddressMatcher whitelist;
 
 			/**
 			 * Maximum connections a computer can have at any time

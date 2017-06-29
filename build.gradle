@@ -6,7 +6,7 @@ apply plugin: 'idea'
 apply plugin: 'maven-publish'
 
 group 'org.squiddev'
-version '1.5.0-nightly-build0'
+version '1.5.0-pr1'
 
 targetCompatibility = sourceCompatibility = 1.6
 compileTestJava.sourceCompatibility = compileTestJava.targetCompatibility = 1.8
@@ -14,7 +14,7 @@ compileTestJava.sourceCompatibility = compileTestJava.targetCompatibility = 1.8
 repositories {
 	mavenCentral()
 
-	maven { url = "https://crzd.me/files/maven/" }
+	maven { url = "https://cc.crzd.me/maven/" }
 
 	maven {
 		name = "squiddev"
@@ -37,7 +37,7 @@ configurations {
 dependencies {
 	provided "com.google.code.findbugs:jsr305:3.0.2"
 
-	provided "dan200.computercraft:ComputerCraft:1.80pr0-build0"
+	provided "dan200.computercraft:ComputerCraft:1.80pr0-build8"
 	compile 'com.google.guava:guava:19.0'
 	shade "org.ow2.asm:asm-debug-all:5.0.4"
 
