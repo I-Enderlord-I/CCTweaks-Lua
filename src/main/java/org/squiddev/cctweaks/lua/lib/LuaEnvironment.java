@@ -162,11 +162,7 @@ public class LuaEnvironment implements ILuaEnvironment {
 	 * @see ILuaMachineFactory#getPreBios()
 	 */
 	public static String getPreBios() {
-		ILuaMachineFactory<?> factory = getUsedMachine();
-		String preBios = Config.Computer.preBiosPath;
-		if (preBios != null && !preBios.isEmpty()) return preBios;
-
-		return factory.getPreBios();
+		return getUsedMachine().getPreBios();
 	}
 
 	private static class LuaAPI implements ILuaAPI, IExtendedLuaObject, IMethodDescriptor {

@@ -11,12 +11,12 @@ public interface ILuaMachineFactory<T extends IExtendedLuaMachine> {
 	/**
 	 * A pre-bios file which protects the string metatable from being accessed or mutated.
 	 */
-	String PRE_BIOS_STRING = "/assets/cctweaks/lua/prebios-string.lua";
+	String PRE_BIOS_STRING = "lua/prebios-string.lua";
 
 	/**
 	 * A pre-bios file which does not protect the string metatable.
 	 */
-	String PRE_BIOS = "/assets/cctweaks/lua/prebios.lua";
+	String PRE_BIOS = "lua/prebios.lua";
 
 
 	/**

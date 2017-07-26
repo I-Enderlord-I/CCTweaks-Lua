@@ -75,6 +75,7 @@ public class RewritingLoader extends URLClassLoader {
 
 			byte[] original = getClassBytes(fileName);
 			byte[] transformed = chain.transform(name, original);
+			if (transformed == null) throw new ClassNotFoundException(name);
 			if (transformed != original) writeDump(fileName, transformed);
 
 			CodeSource codeSource = null;
@@ -88,6 +89,8 @@ public class RewritingLoader extends URLClassLoader {
 			}
 
 			return defineClass(name, transformed, 0, transformed.length, codeSource);
+		} catch (ClassNotFoundException e) {
+			throw e;
 		} catch (Throwable e) {
 			throw new ClassNotFoundException(name, e);
 		}

@@ -7,29 +7,6 @@ import org.squiddev.configgen.*;
  */
 @org.squiddev.configgen.Config(languagePrefix = "gui.config.cctweaks.", propertyPrefix = "cctweaks")
 public final class Config {
-	private static final String BIOS_PATH = "/assets/computercraft/lua/bios.lua";
-
-	@OnSync
-	public static void sync() {
-		if (!Computer.biosPath.startsWith("/")) {
-			TweaksLogger.warn("bios path (" + Computer.biosPath + ") does not start with '/', reverting to default");
-			Computer.biosPath = BIOS_PATH;
-		} else if (Config.class.getResource(Computer.biosPath) == null) {
-			TweaksLogger.warn("Cannot find custom bios (" + Computer.biosPath + "), reverting to default");
-			Computer.biosPath = BIOS_PATH;
-		}
-
-		if (Computer.preBiosPath != null && !Computer.preBiosPath.isEmpty()) {
-			if (!Computer.preBiosPath.startsWith("/")) {
-				TweaksLogger.warn("Pre-bios path (" + Computer.preBiosPath + ") does not start with '/', reverting to default");
-				Computer.preBiosPath = "";
-			} else if (Config.class.getResource(Computer.preBiosPath) == null) {
-				TweaksLogger.warn("Cannot find custom pre-bios (" + Computer.preBiosPath + "), reverting to default");
-				Computer.preBiosPath = "";
-			}
-		}
-	}
-
 	/**
 	 * Computer tweaks and items.
 	 */
@@ -55,22 +32,6 @@ public final class Config {
 		 */
 		@DefaultBoolean(false)
 		public static boolean timeoutError;
-
-		/**
-		 * Specify a custom bios path to use.
-		 * You must include the initial slash.
-		 */
-		@RequiresRestart(mc = false, world = true)
-		@DefaultString(BIOS_PATH)
-		public static String biosPath;
-
-		/**
-		 * Specify a custom pre-bios path to use when executing under a custom ROM.
-		 * You must include the initial slash.
-		 */
-		@RequiresRestart(mc = false, world = true)
-		@DefaultString("")
-		public static String preBiosPath;
 
 		/**
 		 * Configuration options to enable running computers across multiple

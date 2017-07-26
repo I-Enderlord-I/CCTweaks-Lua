@@ -15,9 +15,11 @@ import java.util.Scanner;
  * Handles different versions
  */
 public class VersionHandler {
+	private File ccJar;
+
 	public static List<Object[]> getVersions() {
 		return Arrays.asList(new Object[][]{
-			new Object[]{"1.80pr0-nightly-2017051909"},
+			new Object[]{"1.80pr0-build12"},
 		});
 	}
 
@@ -105,7 +107,9 @@ public class VersionHandler {
 
 		URL[] newUrls = new URL[urls.length + 1];
 		System.arraycopy(urls, 0, newUrls, 0, urls.length);
-		newUrls[urls.length] = new File("lib/ComputerCraft-" + version + ".jar").toURI().toURL();
+		File ccJar = new File("lib/ComputerCraft-" + version + ".jar").getAbsoluteFile();
+		if (!ccJar.isFile()) throw new IllegalStateException(ccJar + " does not exist");
+		newUrls[urls.length] = ccJar.toURI().toURL();
 
 		System.setProperty("cctweaks.Testing.dumpAsm", "true");
 

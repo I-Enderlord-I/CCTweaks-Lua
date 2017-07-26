@@ -15,7 +15,6 @@ import static org.objectweb.asm.Opcodes.*;
 /**
  * Allows changing the bios file
  *
- * @see org.squiddev.cctweaks.lua.Config.Computer#biosPath
  * @see Computer#initLua()
  * @see org.squiddev.cctweaks.lua.patch.Computer_Patch#setRomMount(String, IMount)
  */
@@ -29,7 +28,7 @@ public class CustomBios implements IPatcher {
 	public ClassVisitor patch(String className, ClassVisitor delegate) throws Exception {
 		return new FindingVisitor(
 			delegate,
-			new LdcInsnNode("/assets/computercraft/lua/bios.lua")
+			new LdcInsnNode("lua/bios.lua")
 		) {
 			@Override
 			public void handle(InsnList nodes, MethodVisitor visitor) {
@@ -44,7 +43,7 @@ public class CustomBios implements IPatcher {
 				visitor.visitJumpInsn(GOTO, finish);
 
 				visitor.visitLabel(def);
-				visitor.visitFieldInsn(GETSTATIC, "org/squiddev/cctweaks/lua/Config$Computer", "biosPath", "Ljava/lang/String;");
+				visitor.visitLdcInsn("lua/bios.lua");
 
 				visitor.visitLabel(finish);
 			}

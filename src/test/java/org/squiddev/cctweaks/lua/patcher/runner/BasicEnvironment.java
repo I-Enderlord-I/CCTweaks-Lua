@@ -7,6 +7,7 @@ import dan200.computercraft.core.filesystem.JarMount;
 import org.squiddev.cctweaks.lua.patcher.utils.MountHelpers;
 
 import java.io.IOException;
+import java.io.InputStream;
 
 /**
  * A very basic environment
@@ -67,5 +68,11 @@ public class BasicEnvironment implements IComputerEnvironment {
 		} catch (IOException e) {
 			throw new RuntimeException(e);
 		}
+	}
+
+	@Override
+	public InputStream createResourceFile(String domain, String subPath) {
+		subPath = "assets/" + domain + "/" + subPath;
+		return BasicEnvironment.class.getClassLoader().getResourceAsStream(subPath);
 	}
 }
