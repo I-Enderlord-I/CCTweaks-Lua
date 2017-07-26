@@ -139,6 +139,24 @@ public final class Config {
 		}
 
 		/**
+		 * Provides a library for manipulating large (>32 bits) integers.
+		 */
+		public static final class BigInteger {
+			/**
+			 * Enable the biginteger API.
+			 */
+			@RequiresRestart(mc = false, world = true)
+			@DefaultBoolean(true)
+			public static boolean enabled;
+
+			/**
+			 * The maximum size for prime number generation.
+			 */
+			@DefaultInt(2048)
+			public static int maxPrimeSize;
+		}
+
+		/**
 		 * Enable the debug API.
 		 * This is NOT recommended for servers, use at your own risk.
 		 * It should be save on servers if using Cobalt though.
@@ -152,13 +170,6 @@ public final class Config {
 		 */
 		@RequiresRestart(mc = false, world = true)
 		public static boolean profiler;
-
-		/**
-		 * Enable the biginteger API.
-		 */
-		@RequiresRestart(mc = false, world = true)
-		@DefaultBoolean(true)
-		public static boolean bigInteger;
 
 		/**
 		 * Enable the extended bit operator library

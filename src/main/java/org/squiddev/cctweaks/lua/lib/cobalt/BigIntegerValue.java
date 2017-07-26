@@ -1,5 +1,6 @@
 package org.squiddev.cctweaks.lua.lib.cobalt;
 
+import org.squiddev.cctweaks.lua.Config;
 import org.squiddev.cctweaks.lua.lib.RandomProvider;
 import org.squiddev.cobalt.*;
 import org.squiddev.cobalt.function.ThreeArgFunction;
@@ -270,15 +271,25 @@ public final class BigIntegerValue extends LuaValue {
 					}
 					case 26: { // isProbPrime
 						BigInteger leftNum = getValue(left);
+						if (leftNum.bitLength() > Config.APIs.BigInteger.maxPrimeSize) {
+							throw new LuaError("prime is too large");
+						}
 						int rightProb = right.optInteger(100);
 						return leftNum.isProbablePrime(rightProb) ? TRUE : FALSE;
 					}
 					case 27: { // nextProbPrime
 						BigInteger leftNum = getValue(left);
+						if (leftNum.bitLength() > Config.APIs.BigInteger.maxPrimeSize) {
+							throw new LuaError("prime is too large");
+						}
 						return new BigIntegerValue(leftNum.nextProbablePrime(), metatable);
 					}
 					case 28: { // newProbPrime
 						int length = left.checkInteger();
+						if (length > Config.APIs.BigInteger.maxPrimeSize) {
+							throw new LuaError("prime is too large");
+						}
+
 						SecureRandom seed;
 						if (right.isNil()) {
 							seed = random.get();
@@ -300,8 +311,8 @@ public final class BigIntegerValue extends LuaValue {
 						throw new LuaError("No such method " + opcode);
 				}
 			} catch (ArithmeticException e) {
-				// TODO: Handle this more sensibly
-				return LuaDouble.NAN;
+				String message = e.getMessage() == null || e.getMessage().isEmpty() ? "bad arguments for " + name : e.getMessage();
+				throw new LuaError(message);
 			}
 		}
 
