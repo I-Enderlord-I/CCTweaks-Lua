@@ -29,7 +29,7 @@ public class LuaJFactory implements ILuaMachineFactory<LuaJFactory.LuaJMachine> 
 
 		LuaTable env = machine.getGlobals();
 		if (env != null) {
-			if (Config.APIs.bigInteger) BigIntegerValue.setup(env);
+			if (Config.APIs.BigInteger.enabled) BigIntegerValue.setup(env);
 			if (Config.APIs.bitop) BitOpLib.setup(env);
 		}
 
