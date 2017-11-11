@@ -6,17 +6,12 @@ import java.io.File;
 import java.lang.reflect.InvocationTargetException;
 import java.net.URL;
 import java.net.URLClassLoader;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Scanner;
+import java.util.*;
 
 /**
  * Handles different versions
  */
 public class VersionHandler {
-	private File ccJar;
-
 	public static List<Object[]> getVersions() {
 		return Arrays.asList(new Object[][]{
 			new Object[]{"1.80pr0-build12"},
@@ -105,15 +100,25 @@ public class VersionHandler {
 		URLClassLoader loader = (URLClassLoader) ClassLoader.getSystemClassLoader();
 		URL[] urls = loader.getURLs();
 
-		URL[] newUrls = new URL[urls.length + 1];
-		System.arraycopy(urls, 0, newUrls, 0, urls.length);
 		File ccJar = new File("lib/ComputerCraft-" + version + ".jar").getAbsoluteFile();
 		if (!ccJar.isFile()) throw new IllegalStateException(ccJar + " does not exist");
-		newUrls[urls.length] = ccJar.toURI().toURL();
+
+		// Build a class list without any other CC jar on the path
+		List<URL> newUrls = new ArrayList<>(urls.length);
+		for (URL url : urls) {
+			String name = new File(url.getFile()).getName();
+			if (!name.toLowerCase(Locale.ENGLISH).contains("computercraft")) {
+				newUrls.add(url);
+			}
+		}
+		newUrls.add(ccJar.toURI().toURL());
 
 		System.setProperty("cctweaks.Testing.dumpAsm", "true");
 
-		RewritingLoader newLoader = new RewritingLoader(newUrls, new File("asm/cctweaks-" + version));
+		RewritingLoader newLoader = new RewritingLoader(
+			newUrls.toArray(new URL[newUrls.size()]),
+			new File("asm/cctweaks-" + version)
+		);
 		newLoader.addClassLoaderExclusion("org.junit.");
 		newLoader.addClassLoaderExclusion("org.hamcrest.");
 		newLoader.loadConfig();
