@@ -23,7 +23,6 @@ import org.squiddev.cctweaks.lua.TweaksLogger;
 
 import javax.annotation.Nonnull;
 import java.io.File;
-import java.util.Collections;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
@@ -165,7 +164,7 @@ public class LuaEnvironment implements ILuaEnvironment {
 		return getUsedMachine().getPreBios();
 	}
 
-	private static class LuaAPI implements ILuaAPI, IExtendedLuaObject, IMethodDescriptor {
+	private static class LuaAPI implements ILuaAPI, IMethodDescriptor {
 		private final org.squiddev.cctweaks.api.lua.ILuaAPI api;
 		private final ILuaAPIFactory factory;
 
@@ -203,12 +202,6 @@ public class LuaEnvironment implements ILuaEnvironment {
 		@Override
 		public Object[] callMethod(@Nonnull ILuaContext context, int method, @Nonnull Object[] args) throws LuaException, InterruptedException {
 			return api.callMethod(context, method, args);
-		}
-
-		@Nonnull
-		@Override
-		public Map<Object, Object> getAdditionalData() {
-			return api instanceof IExtendedLuaObject ? ((IExtendedLuaObject) api).getAdditionalData() : Collections.emptyMap();
 		}
 
 		@Override

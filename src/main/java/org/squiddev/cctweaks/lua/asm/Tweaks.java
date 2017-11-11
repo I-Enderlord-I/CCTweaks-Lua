@@ -11,7 +11,6 @@ public class Tweaks {
 		chain.add(new ClassReplaceSource(TweaksLogger.instance, "org.luaj.vm2.lib.DebugLib"));
 		chain.add(new ClassReplaceSource(TweaksLogger.instance, "org.luaj.vm2.lib.StringLib"));
 
-		chain.add(new AddAdditionalData());
 		chain.add(new AddMethodDescriptor());
 		chain.add(new CustomAPIs());
 		chain.add(new CustomBios());

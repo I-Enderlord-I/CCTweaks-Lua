@@ -15,6 +15,7 @@ public class VersionHandler {
 	public static List<Object[]> getVersions() {
 		return Arrays.asList(new Object[][]{
 			new Object[]{"1.80pr0-build12"},
+			new Object[]{"1.80pr1-build0"},
 		});
 	}
 

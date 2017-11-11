@@ -7,7 +7,10 @@ import java.util.Map;
 
 /**
  * Extended functionality for Lua objects and APIs
+ *
+ * @deprecated Not currently supported.
  */
+@Deprecated
 public interface IExtendedLuaObject extends ILuaObject {
 	/**
 	 * Get additional fields to add to this API. These will be converted as normal.

@@ -156,8 +156,6 @@ public class RewritingLoader extends URLClassLoader {
 					OutputStream stream = new FileOutputStream(file);
 					try {
 						stream.write(bytes);
-					} catch (IOException e) {
-						TweaksLogger.error("Cannot write " + file, e);
 					} finally {
 						stream.close();
 					}
