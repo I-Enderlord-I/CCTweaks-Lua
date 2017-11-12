@@ -23,7 +23,7 @@ public class CCEmuRedux {
 		RewritingLoader loader = setupLoader();
 
 		if (width != null || height != null) {
-			loader.chain.add(new SizePatcher(
+			loader.chain().add(new SizePatcher(
 				width == null ? 51 : width,
 				height == null ? 19 : height
 			));
@@ -31,14 +31,14 @@ public class CCEmuRedux {
 
 		if (back != null) {
 			int val = back;
-			loader.chain.add(new ColorPatcher(
+			loader.chain().add(new ColorPatcher(
 				(val >> (8 * 2) & 255) / 255.0f,
 				(val >> (8 * 1) & 255) / 255.0f,
 				(val >> (8 * 0) & 255) / 255.0f
 			));
 		}
 
-		loader.chain.finalise();
+		loader.chain().finalise();
 		execute(loader, "com.xtansia.ccemu.desktop.DesktopLauncher", new String[0]);
 	}
 

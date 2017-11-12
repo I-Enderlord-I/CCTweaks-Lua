@@ -1,12 +1,16 @@
 package org.squiddev.cctweaks.lua.patcher;
 
-import org.squiddev.cctweaks.lua.launch.RewritingLoader;
+import org.squiddev.cctweaks.lua.launch.ClassLoaderHelpers;
+import org.squiddev.cctweaks.lua.launch.DelegatingRewritingLoader;
+import org.squiddev.cctweaks.lua.launch.PriorityURLClassLoader;
 
 import java.io.File;
 import java.lang.reflect.InvocationTargetException;
 import java.net.URL;
-import java.net.URLClassLoader;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+import java.util.Scanner;
 
 /**
  * Handles different versions
@@ -98,36 +102,25 @@ public class VersionHandler {
 	}
 
 	public static ClassLoader getLoader(String version) throws Exception {
-		URLClassLoader loader = (URLClassLoader) ClassLoader.getSystemClassLoader();
-		URL[] urls = loader.getURLs();
-
 		File ccJar = new File("lib/ComputerCraft-" + version + ".jar").getAbsoluteFile();
 		if (!ccJar.isFile()) throw new IllegalStateException(ccJar + " does not exist");
 
-		// Build a class list without any other CC jar on the path
-		List<URL> newUrls = new ArrayList<>(urls.length);
-		for (URL url : urls) {
-			String name = new File(url.getFile()).getName();
-			if (!name.toLowerCase(Locale.ENGLISH).contains("computercraft")) {
-				newUrls.add(url);
-			}
-		}
-		newUrls.add(ccJar.toURI().toURL());
-
 		System.setProperty("cctweaks.Testing.dumpAsm", "true");
 
-		RewritingLoader newLoader = new RewritingLoader(
-			newUrls.toArray(new URL[newUrls.size()]),
+		DelegatingRewritingLoader newLoader = new DelegatingRewritingLoader(
+			new PriorityURLClassLoader(new URL[]{ccJar.toURI().toURL()}, ClassLoader.getSystemClassLoader()),
 			new File("asm/cctweaks-" + version)
 		);
 		newLoader.addClassLoaderExclusion("org.junit.");
 		newLoader.addClassLoaderExclusion("org.hamcrest.");
-		newLoader.loadConfig();
-		newLoader.loadChain();
+
+		ClassLoaderHelpers.loadPropertyConfig(newLoader);
+		ClassLoaderHelpers.syncDump(newLoader);
+		ClassLoaderHelpers.setupChain(newLoader);
 		newLoader.loadClass("org.squiddev.cctweaks.lua.lib.ApiRegister")
 			.getMethod("init")
 			.invoke(null);
-		newLoader.chain.finalise();
+		newLoader.chain().finalise();
 		return newLoader;
 	}
 

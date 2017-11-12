@@ -1,6 +1,5 @@
 package org.squiddev.cctweaks.lua.launch;
 
-import java.net.URLClassLoader;
 import java.util.Arrays;
 
 /**
@@ -14,22 +13,23 @@ public class Launcher {
 		}
 
 		RewritingLoader loader = setupLoader();
-		loader.chain.finalise();
+		loader.chain().finalise();
 		execute(loader, args[0], Arrays.copyOfRange(args, 1, args.length));
 	}
 
 	public static RewritingLoader setupLoader() throws Exception {
-		URLClassLoader current = (URLClassLoader) ClassLoader.getSystemClassLoader();
-		RewritingLoader classLoader = new RewritingLoader(current.getURLs());
+		DelegatingRewritingLoader classLoader = new DelegatingRewritingLoader(ClassLoader.getSystemClassLoader());
 		Thread.currentThread().setContextClassLoader(classLoader);
 
-		classLoader.loadConfig();
-		classLoader.loadChain();
+		ClassLoaderHelpers.loadPropertyConfig(classLoader);
+		ClassLoaderHelpers.syncDump(classLoader);
+		ClassLoaderHelpers.setupChain(classLoader);
 
 		return classLoader;
 	}
 
-	public static void execute(ClassLoader classLoader, String className, String[] arguments) throws Exception {
+	public static void execute(RewritingLoader loader, String className, String[] arguments) throws Exception {
+		ClassLoader classLoader = (ClassLoader) loader;
 		Class<?> api = classLoader.loadClass("org.squiddev.cctweaks.lua.lib.ApiRegister");
 		api
 			.getMethod("init")
