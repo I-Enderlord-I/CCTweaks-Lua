@@ -6,7 +6,7 @@ apply plugin: 'idea'
 apply plugin: 'maven-publish'
 
 group 'org.squiddev'
-version '1.5.0-pr2'
+version '1.5.0-pr3'
 
 targetCompatibility = sourceCompatibility = 1.6
 compileTestJava.sourceCompatibility = compileTestJava.targetCompatibility = 1.8
