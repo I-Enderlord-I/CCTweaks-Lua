@@ -92,12 +92,12 @@ public class VersionHandler {
 		return withRuntimes;
 	}
 
-	public static RewritingLoader getLatestLoader() throws Exception {
+	public static ClassLoader getLatestLoader() throws Exception {
 		List<Object[]> versions = getVersions();
 		return getLoader((String) versions.get(versions.size() - 1)[0]);
 	}
 
-	public static RewritingLoader getLoader(String version) throws Exception {
+	public static ClassLoader getLoader(String version) throws Exception {
 		URLClassLoader loader = (URLClassLoader) ClassLoader.getSystemClassLoader();
 		URL[] urls = loader.getURLs();
 
@@ -131,11 +131,12 @@ public class VersionHandler {
 		return newLoader;
 	}
 
-	public static void runClass(ClassLoader loader, String source, String name) throws Throwable {
+	@SuppressWarnings("unchecked")
+	public static <T> T runClass(ClassLoader loader, String source, String name) throws Throwable {
 		source = "org.squiddev.cctweaks.lua.patcher." + source;
 		Class<?> runner = loader.loadClass(source);
 		try {
-			runner.getMethod(name).invoke(null);
+			return (T) runner.getMethod(name).invoke(null);
 		} catch (InvocationTargetException e) {
 			throw e.getTargetException();
 		}
