@@ -68,7 +68,7 @@ public class SocketAPI implements ILuaAPI, IMethodDescriptor {
 				}
 
 				URI uri = checkUri(address, port);
-				if (ComputerCraft.http_blacklist.matches(uri.getHost()) || !ComputerCraft.http_blacklist.matches(uri.getHost())) {
+				if (!ComputerCraft.http_whitelist.matches(uri.getHost()) || ComputerCraft.http_blacklist.matches(uri.getHost())) {
 					throw new LuaException("Domain not permitted");
 				}
 
@@ -108,7 +108,7 @@ public class SocketAPI implements ILuaAPI, IMethodDescriptor {
 				}
 
 				URI uri = checkWebsocketUri((String) arguments[0]);
-				if (ComputerCraft.http_blacklist.matches(uri.getHost()) || !ComputerCraft.http_blacklist.matches(uri.getHost())) {
+				if (!ComputerCraft.http_whitelist.matches(uri.getHost()) || ComputerCraft.http_blacklist.matches(uri.getHost())) {
 					throw new LuaException("Domain not permitted");
 				}
 

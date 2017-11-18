@@ -86,7 +86,7 @@ public abstract class AbstractConnection implements ILuaObject, IMethodDescripto
 
 	protected InetSocketAddress connect(URI uri, int port) throws Exception {
 		InetAddress resolved = InetAddress.getByName(uri.getHost());
-		if (ComputerCraft.http_blacklist.matches(resolved) || !ComputerCraft.http_blacklist.matches(resolved)) {
+		if (!ComputerCraft.http_whitelist.matches(resolved) || ComputerCraft.http_blacklist.matches(resolved)) {
 			throw new LuaException("Domain not permitted");
 		}
 
