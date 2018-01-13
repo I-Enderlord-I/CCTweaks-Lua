@@ -20,6 +20,7 @@ public class VersionHandler {
 		return Arrays.asList(new Object[][]{
 			new Object[]{"1.80pr0-build12"},
 			new Object[]{"1.80pr1-build0"},
+			new Object[]{"1.80pr1-build3"},
 		});
 	}
 

@@ -6,7 +6,7 @@ apply plugin: 'idea'
 apply plugin: 'maven-publish'
 
 group 'org.squiddev'
-version '1.5.0-pr3'
+version '1.5.0-pr4'
 
 targetCompatibility = sourceCompatibility = 1.6
 compileTestJava.sourceCompatibility = compileTestJava.targetCompatibility = 1.8
@@ -37,7 +37,7 @@ configurations {
 dependencies {
 	provided "com.google.code.findbugs:jsr305:3.0.2"
 
-	provided "dan200.computercraft:ComputerCraft:1.80pr1-build0"
+	provided "dan200.computercraft:ComputerCraft:1.80pr1-build3"
 	compile 'com.google.guava:guava:19.0'
 	shade "org.ow2.asm:asm-debug-all:5.0.4"
 
@@ -65,6 +65,7 @@ idea { module { scopes.PROVIDED.plus += [configurations.provided] } }
 def versions = [
 	('1.80pr0-build12'): 'http://cc.crzd.me/maven/dan200/computercraft/ComputerCraft/1.80pr0-build12/ComputerCraft-1.80pr0-build12.jar',
 	('1.80pr1-build0'): 'http://cc.crzd.me/maven/dan200/computercraft/ComputerCraft/1.80pr1-build0/ComputerCraft-1.80pr1-build0.jar',
+	('1.80pr1-build3'): 'http://cc.crzd.me/maven/dan200/computercraft/ComputerCraft/1.80pr1-build3/ComputerCraft-1.80pr1-build3.jar',
 ]
 
 task getVersions(type: Task) {
